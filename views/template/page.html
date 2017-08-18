@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <nav aria-label="...">
+        <ul class="pager">
+            <li><a href="/admin/{{which}}?page={{page-1}}">上一页</a></li>
+            <li>
+                一共有{{count}}条数据，每页显示{{limit}}条数据，共有{{pages}}页，当前第{{page}}页
+            </li>
+            <li><a href="/admin/{{which}}?page={{page+1}}">下一页</a></li>
+        </ul>
+    </nav>
+</body>
+</html>
