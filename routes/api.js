@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/User');
+var Content = require('../models/Content');
 
 //统一返回格式
 var responseData;
@@ -127,7 +128,47 @@ router.get('/user/logout',function(req, res, next){
     req.cookies.set('loginInfo', null);
     res.json(responseData);
     return;
-})
+});
+
+
+/**
+ * 加载页面获取已有的评论
+ */
+router.get('/comment', function(req, res){
+    var contentId = req.query.contentid || '';
+    Content.findOne({
+        _id:contentId
+    }).then(function(content){
+        responseData.data = content;
+        res.json(responseData);
+    })
+});
+
+
+/**
+ * 提交新的评论时获取新评论并在前端显示
+ */
+router.post('/comment/post', function(req, res){
+    //内容的id
+    var contentId = req.body.contentid || '';
+    var postData = {
+        username:req.userLoginInfo.username,
+        postTime:new Date(),
+        content:req.body.content
+    }
+
+    //查询当前这篇内容的信息
+    Content.findOne({
+        _id:contentId
+    }).then(function(content){
+        content.comments.push(postData);
+        return content.save();
+    }).then(function(newContent){
+        responseData.message = '评论成功';
+        responseData.data = newContent;
+        res.json(responseData);
+    })
+});
 
 
 module.exports = router;

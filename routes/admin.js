@@ -231,7 +231,7 @@ router.get('/category/edit', function(req, res, next){
            
         }
     }).then(function(sameCategory){
-        console.log(sameCategory)
+        // console.log(sameCategory);
         if(sameCategory){
             res.render('template/tipInfo', {
                 userLoginInfo:req.userLoginInfo,
@@ -302,7 +302,7 @@ router.get('/content',function(req, res) {
          * 1:升序
          * -1:降序
          */
-        Content.find().sort({_id:-1}).limit(2).skip(skip).populate(['category', 'user']).then(function(contents){
+        Content.find().sort({_id:-1}).limit(2).skip(skip).populate(['category', 'user']).sort({addTime:-1}).then(function(contents){
             res.render('template/content_index', {
                 userLoginInfo:req.userLoginInfo,
                 contents:contents,

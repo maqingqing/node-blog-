@@ -1,0 +1,97 @@
+{%extends 'layout_index.html'%}
+{%block view%}
+
+<article class="post">
+    <div class="post-head">
+        <h1 class="post-title">
+            <a href="#">{{content.title}}</a>
+        </h1>
+        <div class="post-meta">
+            <span class="author">
+                作者：
+                <a href="#">{{userLoginInfo.username}}</a>
+            </span>
+            •
+            时间：
+            <a href="#" class="post-date" >{{content.addTime|date('Y-m-d H:i:s', -8*60)}}</a>
+
+        </div>
+    </div>
+    <!--<div class="post-content">-->
+        <!--<p>{{content.description}}</p>-->
+    <!--</div>-->
+    <div class="post-content">
+       <p>{{content.content}}</p>
+    </div>
+    <footer class="post-footer clearfix">
+        <div class="pull-left tag-list">
+            <!--<i class="fa fa-folder-open-o"></i>-->
+            <span>
+                阅读量:
+                <a href="#">{{content.views}}</a>
+            </span>
+            <span>
+                评论:
+                <a href="#">{{content.comments.length}}</a>
+            </span>
+        </div>
+    </footer>
+</article>
+
+<article class="post">
+    <div class="post-head">
+        <h1 class="post-title">
+            评论
+        </h1>
+        <div class="post-meta">
+            <span class="author">
+                一共有
+                <a href="#" id="commentCount">0</a>
+                条评论
+            </span>
+        </div>
+    </div>
+
+    <div class="post-content">
+        {% if userLoginInfo._id %}
+        <textarea id="messageCon" style="width:85%;"></textarea>
+        <input type="text" class="hidden" id="contentId" value="{{content.id}}">
+        <button class="btn btn-info" id="messageSub">提交</button>
+        {%else%}
+        <div>
+            <p class="ifLogin">您还没有登录！请先登录</p>
+        </div>
+        {%endif%}
+        <!--<div class="messageList">-->
+            <!--<P class="font-12 martop-20">还没有评论</P>-->
+        <!--</div>-->
+        <div class="messageList font-12">
+
+            <!--<div class="comment">-->
+                <!--<p>-->
+                    <!--<span class="left">作者</span>-->
+                    <!--<span class="right">时间</span>-->
+                <!--</p>-->
+                <!--<p>评论内容</p>-->
+            <!--</div>-->
+        </div>
+
+
+        <nav class="pagination font-12 commentPage" role="navigation">
+            <a href="javascript:;" class="older-posts previous">
+                <i class="fa fa-angle-left line"></i>
+            </a>
+            <span class="page-number lineH"></span>
+            <a href="javascript:;" class="older-posts next">
+                <i class="fa fa-angle-right line"></i>
+            </a>
+        </nav>
+
+
+    </div>
+    <footer class="post-footer clearfix">
+
+    </footer>
+</article>
+
+{%endblock%}

@@ -80,6 +80,114 @@ $(function(){
                 }
             }
         })
-    })
+    });
 
-})
+
+    /**
+     * 评论分页
+     */
+    var limit = 2;
+    var page = 1;
+    var pages = 0;
+    var comments = [];
+
+    /**
+     * 提交评论
+     */
+    $('#messageSub').click(function(){
+        $.ajax({
+            type:'POST',
+            url:'/api/comment/post',
+            data:{
+                contentid:$('#contentId').val(),
+                content:$('#messageCon').val()
+            },
+            success:function(msg){
+                // console.log(msg);
+                comments = msg.data.comments.reverse();
+                rederComment();
+            }
+
+        })
+    });
+
+    $.ajax({
+        type:'GET',
+        url:'/api/comment',
+        data:{
+            contentid:$('#contentId').val()
+        },
+        success:function(msg){
+            // console.log(msg);
+            comments = msg.data.comments.reverse();
+            rederComment();
+        }
+    });
+
+    /**
+     * 事件委托评论内容分页
+     */
+    $('.commentPage').delegate('a','click', function () {
+        if($(this).hasClass('previous')){
+            page--;
+        }
+        if($(this).hasClass('next')){
+            page++;
+        }
+        rederComment();
+    });
+
+    /**
+     * 渲染评论
+     * @param comments
+     */
+    function rederComment() {
+        $('#commentCount').html(comments.length);
+
+        pages = Math.max(Math.ceil(comments.length/limit), 1);
+        var start = Math.max(0,(page-1)*limit);
+        var end = Math.min(start+limit, comments.length);
+        var $lis = $('.page-number.lineH');
+        $lis.html('第'+page+'/'+pages);
+
+        if(page<=1){
+            page = 1;
+            $('.commentPage a').eq(0).html('');
+        }else{
+            $('.commentPage a').eq(0).html('<i class="fa fa-angle-left line"></i>');
+        }
+        if(page>=pages){
+            page = pages;
+            $('.commentPage a').eq(1).html('');
+        }else{
+            $('.commentPage a').eq(1).html('<i class="fa fa-angle-right line"></i>');
+        }
+
+        if(comments.length == 0){
+            $('.messageList').html('<P class="font-12 martop-20">还没有评论</P>');
+        } else{
+            var html = '';
+            for(var i=start;i<end;i++){
+                html+='<div class="comment">'+
+                    '<p>'+
+                    '<span class="left">'+comments[i].username+'</span>'+
+                    '<span class="right">'+formatDate(comments[i].postTime)+'</span>'+
+                    '</p>'+
+                    '<p>'+comments[i].content+'</p>'+
+                    '</div>';
+
+            }
+            $('.messageList').html(html);
+        }
+    }
+
+    /**
+     * 处理评论时间
+     */
+    function formatDate(d){
+        var date1 = new Date(d);
+        return date1.getFullYear()+'-'+(date1.getMonth()+1)+'-'+date1.getDate()+' '+date1.getHours()+':'+date1.getMinutes()+':'+date1.getSeconds();
+    }
+
+
+});
